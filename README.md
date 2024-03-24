@@ -25,6 +25,9 @@ docker container exec -it snappi python /scripts/start_traffic.py {config_file} 
 ex)
 docker container exec -it snappi python /scripts/start_traffic.py sample01.yml 5
 ```
+config_file: ixia-c config  
+seconds: The time to flow traffic.
+
 - Containerlab Destroy
 ```
 cd {ixia-c_containerlab}
@@ -37,7 +40,8 @@ The config is written in YAML that complies with OTG.
 Check this page: https://github.com/open-traffic-generator
 
 ### Sample01
-It performs UDP communication in a simple configuration contained within a single segment.
+It performs UDP communication in a simple configuration contained within a single segment.  
+
 ![sample01](./sample01.png)
 
 ## Packet Capture
