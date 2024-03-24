@@ -1,0 +1,96 @@
+captures:
+- format: pcap
+  name: cp
+  overwrite: true
+  port_names:
+  - eth1
+  - eth2
+devices:
+- ethernets:
+  - connection:
+      choice: port_name
+      port_name: eth1
+    ipv4_addresses:
+    - address: 192.168.1.1
+      gateway: 192.168.1.2
+      name: dev1_ip
+      prefix: 24
+    mac: 00:00:5e:00:53:01
+    mtu: 1500
+    name: dev1_eth
+  name: dev1
+- ethernets:
+  - connection:
+      choice: port_name
+      port_name: eth2
+    ipv4_addresses:
+    - address: 192.168.1.2
+      gateway: 192.168.1.1
+      name: dev2_ip
+      prefix: 24
+    mac: 00:00:5e:00:53:02
+    mtu: 1500
+    name: dev2_eth
+  name: dev2
+flows:
+- duration:
+    choice: fixed_seconds
+    fixed_seconds:
+      gap: 12
+      seconds: 10
+  metrics:
+    enable: true
+    loss: false
+    timestamps: false
+  name: flow_eth1_to_eth2
+  packet:
+  - choice: ethernet
+    ethernet:
+      src:
+        choice: value
+        value: 00:00:5e:00:53:01
+      dst:
+        choice: auto
+  - choice: ipv4
+    ipv4:
+      src:
+        choice: value
+        value: 192.168.1.1
+      dst:
+        choice: value
+        value: 192.168.1.2
+  - choice: udp
+    udp:
+      src_port:
+        choice: value
+        value: 8012
+      dst_port:
+        choice: value
+        value: 8123
+  rate:
+    choice: pps
+    pps: '10'
+  size:
+    choice: fixed
+    fixed: 32
+  tx_rx:
+    choice: device
+    device:
+      mode: one_to_one
+      tx_names:
+      - dev1_ip
+      rx_names:
+      - dev2_ip
+layer1:
+- mtu: 1500
+  name: ly
+  port_names:
+  - eth1
+  - eth2
+  promiscuous: true
+  speed: speed_1_gbps
+ports:
+- location: eth1
+  name: eth1
+- location: eth2
+  name: eth2
