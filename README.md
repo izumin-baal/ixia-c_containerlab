@@ -37,12 +37,29 @@ sudo containerlab destroy --topo sample01_ixia-c.clab.yml
 ## ixia-c Config
 ixia-c Config is in `scripts/ixiaconf`  
 The config is written in YAML that complies with OTG.  
-Check this page: https://github.com/open-traffic-generator
+Check this page: https://github.com/open-traffic-generator  
+Redoc: https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/open-traffic-generator/models/master/artifacts/openapi.yaml&nocors
 
 ### Sample01
 It performs UDP communication in a simple configuration contained within a single segment.  
 
+
 ![sample01](./sample01.png)
+
+
+### Sample02
+Routing is performed across two segments, and TCP communication is conducted..  
+
+
+![sample02](./sample02.png)
+
+### Sample03
+Communication is conducted over routes advertised by BGP.  
+
+
+![sample03](./sample03.png)
+
+
 
 ## Packet Capture
 DEV-IXIA captures files.  
