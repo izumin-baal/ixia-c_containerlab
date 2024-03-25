@@ -1,0 +1,158 @@
+captures:
+- format: pcap
+  name: cp
+  overwrite: true
+  port_names:
+  - eth1
+  - eth2
+devices:
+- ethernets:
+  - connection:
+      choice: port_name
+      port_name: eth1
+    ipv4_addresses:
+    - address: 10.1.1.1
+      gateway: 10.1.1.2
+      name: dev1_ip
+      prefix: 30
+    mac: 00:00:5e:00:53:01
+    mtu: 1500
+    name: dev1_eth
+  name: dev1
+  bgp:
+    router_id: 10.1.1.1
+    ipv4_interfaces:
+    - ipv4_name: dev1_ip
+      peers: 
+      - peer_address: 10.1.1.2
+        as_type: ebgp
+        learned_information_filter:
+          unicast_ipv4_prefix: true
+        as_number: 65000
+        name: dev1_bgp
+        v4_routes:
+        - addresses:
+          - address: 192.168.1.1
+            count: 10
+            prefix: 32
+            step: 1
+          advanced:
+            include_local_preference: true
+            local_preference: 100
+            include_origin: true
+            origin: egp
+            include_multi_exit_discriminator: true
+            multi_exit_discriminator: 50
+          name: dev1_adv_route
+          next_hop_address_type: ipv4
+          next_hop_ipv4_address: 10.1.1.1
+          next_hop_mode: manual
+- ethernets:
+  - connection:
+      choice: port_name
+      port_name: eth2
+    ipv4_addresses:
+    - address: 10.4.4.1
+      gateway: 10.4.4.2
+      name: dev2_ip
+      prefix: 30
+    mac: 00:00:5e:00:53:02
+    mtu: 1500
+    name: dev2_eth
+  name: dev2
+  bgp:
+    router_id: 10.4.4.1
+    ipv4_interfaces:
+    - ipv4_name: dev2_ip
+      peers: 
+      - peer_address: 10.4.4.2
+        as_type: ebgp
+        learned_information_filter:
+          unicast_ipv4_prefix: true
+        as_number: 65000
+        name: dev2_bgp
+        v4_routes:
+        - addresses:
+          - address: 192.168.2.1
+            count: 10
+            prefix: 32
+            step: 1
+          advanced:
+            include_local_preference: true
+            local_preference: 100
+            include_origin: true
+            origin: egp
+            include_multi_exit_discriminator: true
+            multi_exit_discriminator: 50
+          name: dev2_adv_route
+          next_hop_address_type: ipv4
+          next_hop_ipv4_address: 10.4.4.1
+          next_hop_mode: manual
+flows:
+- duration:
+    choice: fixed_seconds
+    fixed_seconds:
+      gap: 12
+      seconds: 10
+  metrics:
+    enable: true
+    loss: false
+    timestamps: false
+  name: flow_eth1_to_eth2
+  packet:
+  - choice: ethernet
+    ethernet:
+      src:
+        choice: value
+        value: 00:00:5e:00:53:01
+      dst:
+        choice: auto
+  - choice: ipv4
+    ipv4:
+      src:
+        choice: value
+        value: 192.168.1.1
+      dst:
+        choice: value
+        value: 192.168.2.1
+  - choice: udp
+    udp:
+      src_port:
+        choice: increment
+        increment:
+          start: 49152
+          count: 10000
+          step: 1
+      dst_port:
+        choice: value
+        value: 53
+      ctl_syn:
+        choice: value
+        value: 1
+  rate:
+    choice: pps
+    pps: '10'
+  size:
+    choice: fixed
+    fixed: 32
+  tx_rx:
+    choice: device
+    device:
+      mode: mesh
+      tx_names:
+      - dev1_adv_route
+      rx_names:
+      - dev2_adv_route
+layer1:
+- mtu: 1500
+  name: ly
+  port_names:
+  - eth1
+  - eth2
+  promiscuous: true
+  speed: speed_1_gbps
+ports:
+- location: eth1
+  name: eth1
+- location: eth2
+  name: eth2

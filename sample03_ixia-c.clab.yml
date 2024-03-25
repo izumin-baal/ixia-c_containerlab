@@ -1,0 +1,30 @@
+name: sample02_ixia-c
+prefix: ""
+
+topology:
+  nodes:
+    snappi:
+      kind: linux
+      image: snappi:local
+      binds:
+        - ./scripts:/scripts
+    DEV-IXIA:
+      kind: keysight_ixia-c-one
+      image: ghcr.io/open-traffic-generator/ixia-c-one:1.1.0-10
+    DEV-SW1:
+      kind: ceos
+      image: ceos:local
+      startup-config: config/sample03_DEV-SW1.conf
+    DEV-SW2:
+      kind: ceos
+      image: ceos:local
+      startup-config: config/sample03_DEV-SW2.conf
+    DEV-SW3:
+      kind: ceos
+      image: ceos:local
+      startup-config: config/sample03_DEV-SW3.conf
+  links:
+    - endpoints: ["DEV-IXIA:eth1","DEV-SW1:eth1"]
+    - endpoints: ["DEV-IXIA:eth2","DEV-SW2:eth1"]
+    - endpoints: ["DEV-SW1:eth2","DEV-SW3:eth1"]
+    - endpoints: ["DEV-SW2:eth2","DEV-SW3:eth2"]
