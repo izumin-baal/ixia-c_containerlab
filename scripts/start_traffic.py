@@ -49,6 +49,16 @@ def main(config_file, total_time):
     api.set_config(cfg)
     print_config(api)
 
+    # BGP Setup
+    try:
+        bs = api.control_state()
+        bs.protocol.bgp.peers.state = bs.protocol.bgp.peers.UP
+        api.set_control_state(bs)
+        print('Setup BGP wait 10sec...')
+        time.sleep(10)
+    except:
+        print('Not BGP')
+
     # Capture Setup
     cs = api.control_state()
     cs.port.capture.state = cs.port.capture.START
@@ -77,7 +87,7 @@ def main(config_file, total_time):
         pcap_bytes = api.get_capture(req)
         with open('/scripts/pcapfile/' + p.name + '.pcap', 'wb') as p:
             p.write(pcap_bytes.read())
-            print("Save :" + p.name + '.pcap')
+            print("Save :" + p.name)
 
 if __name__ == '__main__':
     print('### Traffic Generator Start ###')
