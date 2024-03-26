@@ -44,20 +44,20 @@ Redoc: https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/op
 It performs UDP communication in a simple configuration contained within a single segment.  
 
 
-![sample01](./sample01.png)
+![sample01](./img/sample01.png)
 
 
 ### Sample02
 Routing is performed across two segments, and TCP communication is conducted..  
 
 
-![sample02](./sample02.png)
+![sample02](./img/sample02.png)
 
 ### Sample03
 Communication is conducted over routes advertised by BGP.  
 
 
-![sample03](./sample03.png)
+![sample03](./img/sample03.png)
 
 
 
